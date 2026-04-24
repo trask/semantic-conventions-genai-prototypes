@@ -29,10 +29,12 @@
         "pin",
         "digest"
       ],
-      "groupName": "reference-minor"
+      "groupName": "reference implementation dependencies (non-major)",
+      "commitMessageTopic": "reference implementation dependencies (non-major)"
     },
     {
-      "groupName": "github actions",
+      "groupName": "GitHub Actions",
+      "commitMessageTopic": "GitHub Actions",
       "matchManagers": [
         "github-actions"
       ],
