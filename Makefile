@@ -1,6 +1,7 @@
 # GenAI Semantic Conventions - Makefile
-# Requires: weaver >= 0.23.0
-# Install: https://github.com/open-telemetry/weaver/releases
+# Requires: docker (or podman aliased as docker)
+# The weaver version is pinned in versions.env (WEAVER_VERSION) and run via
+# the otel/weaver container image -- contributors do not need to install weaver locally.
 
 # Shared external version pins. Override on the command line when needed, e.g.
 # `make check SEMCONV_VERSION=v1.40.0`.
@@ -10,15 +11,17 @@ include $(VERSION_PINS_FILE)
 # Templates from the main semconv repo for doc generation
 TEMPLATE_REPO := https://github.com/open-telemetry/semantic-conventions.git@$(SEMCONV_VERSION)[templates]
 
-# Clear Weaver's global vdir cache before each run so local results match CI.
-# Weaver 0.22.1 stores fetched registries under dirs::home_dir(), which stays global
-# across repos and invocations on Windows. When that cache is stale, `registry
-# update-markdown` can resolve shared attributes against the wrong source group and
-# rewrite links such as `gen_ai.operation.name`, `error.type`, `server.address`, and
-# `server.port` to `/docs/attributes/attributes/event.md` instead of the correct
-# `gen-ai.md`, `error.md`, or `server.md` targets. Clearing the cache removes that
-# stale-link failure mode, but it does not fix the separate resolve instability below.
-WEAVER_VDIR_CACHE := $(HOME)/.weaver/vdir_cache
+# Run weaver via the pinned container image. The repo is bind-mounted at
+# /workspace and that is the working directory, so every relative path the
+# targets below pass to weaver (./model, .build/..., docs/, docs/registry)
+# resolves the same way it would for a host-installed weaver.
+WEAVER_IMAGE := otel/weaver:$(WEAVER_VERSION)
+WEAVER := docker run --rm \
+	-u $(shell id -u):$(shell id -g) \
+	-v "$(CURDIR):/workspace" \
+	-w /workspace \
+	-e HOME=/tmp \
+	$(WEAVER_IMAGE)
 
 # Local cache of policies fetched from upstream (gitignored)
 LOCAL_POLICIES := .build/weaver-policies
@@ -46,7 +49,7 @@ SC_UPSTREAM_STAMP := $(SC_UPSTREAM_FILTERED)/.stamp-$(SEMCONV_VERSION)
 # from the filtered copy so their group ids do not collide with ours.
 SC_UPSTREAM_MIGRATED_DIRS := gen-ai mcp openai
 
-.PHONY: check generate-docs update-markdown check-docs resolve clean clear-weaver-vdir-cache filter-upstream fix-external-links
+.PHONY: check generate-docs check-docs resolve clean filter-upstream fix-external-links
 
 # Pinned upstream GitHub URL base, used by fix-external-links to rewrite doc
 # links that point at files living only in open-telemetry/semantic-conventions.
@@ -88,36 +91,33 @@ $(SC_UPSTREAM_STAMP): $(VERSION_PINS_FILE)
 
 filter-upstream: $(SC_UPSTREAM_STAMP)
 
-clear-weaver-vdir-cache:
-	rm -rf "$(WEAVER_VDIR_CACHE)"
-
 # Validate the model and run shared policies
-check: clear-weaver-vdir-cache $(LOCAL_POLICY_STAMP) $(SC_UPSTREAM_STAMP)
-	weaver registry check \
+check: $(LOCAL_POLICY_STAMP) $(SC_UPSTREAM_STAMP)
+	$(WEAVER) registry check \
 		-r ./model \
 		--policy $(LOCAL_POLICIES)/policies/check
 
-# Generate registry docs (attributes, entities) under docs/registry/, matching
-# the layout used by open-telemetry/semantic-conventions.
-generate-docs: clear-weaver-vdir-cache $(SC_UPSTREAM_STAMP)
-	weaver registry generate \
+# Regenerate everything Weaver owns under docs/:
+#   1. The attribute registry pages under docs/registry/ (full directory of
+#      generated markdown).
+#   2. The semconv snippet tables embedded in hand-written signal docs under
+#      docs/gen-ai/ (refreshed in place between <!-- semconv ... --> markers).
+# Depends on $(SC_UPSTREAM_STAMP) so the upstream dependency Weaver sees has
+# the groups we redefine locally stripped out -- see the long comment on
+# SC_UPSTREAM_FILTERED above.
+generate-docs: $(SC_UPSTREAM_STAMP)
+	$(WEAVER) registry generate \
 		-r ./model \
 		--templates $(TEMPLATE_REPO) \
 		markdown \
 		docs/registry
-	$(MAKE) --no-print-directory fix-external-links
-
-# Update semconv snippet tables in hand-written signal docs (spans, metrics, events).
-# Depends on $(SC_UPSTREAM_STAMP) so the upstream dependency Weaver sees has the
-# groups we redefine locally stripped out -- see the long comment on
-# SC_UPSTREAM_FILTERED above.
-update-markdown: clear-weaver-vdir-cache $(SC_UPSTREAM_STAMP)
-	weaver registry update-markdown \
+	$(WEAVER) registry update-markdown \
 		-r ./model \
 		--templates $(TEMPLATE_REPO) \
 		--target markdown \
 		--param registry_base_url=/docs/registry/ \
 		docs
+	$(MAKE) --no-print-directory fix-external-links
 	$(MAKE) --no-print-directory fix-external-links
 
 # Rewrite absolute /docs/... links in generated docs so they resolve on GitHub.
@@ -177,8 +177,8 @@ check-docs: generate-docs
 	@echo "OK: Deterministic generated documentation is up to date"
 
 # Output the resolved schema (useful for debugging)
-resolve: clear-weaver-vdir-cache $(SC_UPSTREAM_STAMP)
-	weaver registry generate \
+resolve: $(SC_UPSTREAM_STAMP)
+	$(WEAVER) registry generate \
 		-r ./model \
 		--skip-policies \
 		-f yaml

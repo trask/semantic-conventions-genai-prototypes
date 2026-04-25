@@ -18,6 +18,8 @@ Include:
 
 ## Checklist
 
-- [ ] Changelog entry added under `Unreleased` in `CHANGELOG.md` (or PR is labeled `chore`)
+- [ ] Motivation section filled in above
 - [ ] Reference instrumentation and scenarios updated for affected libraries
-- [ ] `make check` and `make generate-docs` run locally; regenerated docs committed
+- [ ] Changelog entry added under `Unreleased` in `CHANGELOG.md` (editorial-only changes can skip this)
+
+See [CONTRIBUTING.md]

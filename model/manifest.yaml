@@ -12,7 +12,7 @@ dependencies:
   # the canonical home for those conventions going forward; until upstream
   # deletes its copies we strip them here so Weaver does not see the same
   # group ids defined in two places. The Makefile target that produces
-  # `.build/sc-upstream-filtered` is invoked automatically by `check`,
-  # `generate-docs`, and `update-markdown`.
+  # `.build/sc-upstream-filtered` is invoked automatically by `check` and
+  # `generate-docs`.
   - name: otel
     registry_path: ./.build/sc-upstream-filtered

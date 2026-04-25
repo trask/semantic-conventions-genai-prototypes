@@ -6,43 +6,25 @@ Before you start — see the OpenTelemetry general
 [contributing](https://github.com/open-telemetry/community/blob/main/guides/contributor/README.md)
 requirements and recommendations.
 
-## Sign the CLA
+## Prerequisites
 
-Before you can contribute, you will need to sign the
-[Contributor License Agreement](https://identity.linuxfoundation.org/projects/cncf).
+You need [Docker](https://docs.docker.com/get-docker/) (or a compatible
+runtime such as Podman aliased as `docker`). The Makefile pins and runs
+Weaver via the `otel/weaver` container image.
 
-## How to contribute
-
-- All attributes, metrics, etc. are formally defined in YAML files under
-  the `model/` directory.
-- All descriptions and normative language are defined in the `docs/` directory.
-- In the PR description, include links to the relevant instrumentation and any
-  applicable prototypes.
-
-If you are working on the runnable reference project under `reference/`, see
-[reference/CONTRIBUTING.md](reference/CONTRIBUTING.md).
-
-Changes under `model/` or `docs/` can also require regenerated reference
-scenario outputs and reference docs; the reference guide covers that workflow.
-
-### Prerequisites
-
-Install [Weaver](https://github.com/open-telemetry/weaver/releases)
-(>= 0.22.1) and ensure it is on your `PATH`.
-
-### 1. Modify the YAML model
+## 1. Modify the YAML model
 
 Refer to the
 [Semantic Convention YAML Language](https://github.com/open-telemetry/weaver/blob/main/schemas/semconv-syntax.md)
 to learn how to make changes to the YAML files.
 
-#### Code structure
+### Code structure
 
 ```
 ├── docs
-│   ├── attributes/        # auto-generated attribute registry pages
-│   ├── gen-ai/            # hand-written signal docs (spans, metrics, events)
-│   ├── mcp/               # hand-written MCP signal docs
+│   ├── gen-ai/            # hand-written docs (spans, metrics, events)
+│   │   └── mcp.md         # hand-written MCP doc
+│   └── registry/          # auto-generated attribute registry pages
 ├── model
 │   ├── manifest.yaml      # dependency on core semantic conventions
 │   ├── gen-ai/
@@ -52,31 +34,31 @@ to learn how to make changes to the YAML files.
 │   │   ├── events.yaml    # event conventions
 │   │   └── deprecated/    # deprecated conventions
 │   ├── mcp/
-│   ├── openai/
+│   └── openai/
 ```
 
 All attributes must be defined in `registry.yaml` files under the matching
 namespace folder in `model/`.
 
-### 2. Update the markdown files
+### Stability level
 
-After updating the YAML file(s), regenerate the documentation:
+Every new group and attribute must declare a `stability:` level. New
+proposals should start at `development`. Promotion to `release_candidate`
+or `stable` should be a separate PR.
+
+## 2. Regenerate the docs
+
+After updating the YAML, run:
 
 ```bash
-make generate-docs update-markdown
+make generate-docs
 ```
 
-When defining new telemetry signals (spans, metrics, events), add a new
-markdown section with semconv markers:
+This regenerates the attribute registry pages under `docs/registry/` and
+refreshes the generated tables embedded in the hand-written docs
+under `docs/gen-ai/`.
 
-```markdown
-<!-- semconv new-group-id -->
-<!-- endsemconv -->
-```
-
-Then re-run the generation commands above.
-
-### 3. Validate
+## 3. Validate
 
 Run the full validation suite:
 
@@ -87,28 +69,39 @@ make check
 This validates the model against shared policies from
 [opentelemetry-weaver-packages](https://github.com/open-telemetry/opentelemetry-weaver-packages).
 
-To verify that docs are in sync:
+## 4. Update reference scenarios
 
-```bash
-make check-docs
-```
+Changes under `model/` or `docs/` typically require updating the runnable
+reference scenarios under `reference/`. Ideally at least two real
+libraries should demonstrate the new convention end-to-end. See
+[reference/CONTRIBUTING.md](reference/CONTRIBUTING.md).
 
-### 4. Getting your PR merged
+## 5. Update the changelog
 
-A PR is considered **ready to merge** when:
+Add an entry under `Unreleased` in [CHANGELOG.md](CHANGELOG.md) for any
+change a consumer of these conventions would need to notice. Editorial
+changes (typos, rewording, non-normative clarifications) don't need an
+entry.
 
-- It has received the required approvals
-- There are no open discussions
-- It has been at least two working days since the last modification
-  (except for trivial updates like typos, cosmetic changes, rebases)
+## Keep PRs small
 
-## Makefile targets
+Small, focused PRs are much easier to review, and therefore much more
+likely to land quickly. Even when changes are related, prefer phasing
+them across multiple narrow PRs over one large change.
 
-| Target             | Description                                              |
-| ------------------ | -------------------------------------------------------- |
-| `check`            | Validate the model and run shared policies               |
-| `generate-docs`    | Generate attribute registry pages                        |
-| `update-markdown`  | Update semconv tables in hand-written signal docs        |
-| `check-docs`       | Verify generated docs are in sync with the model         |
-| `resolve`          | Output the resolved schema (for debugging)               |
-| `clean`            | Remove generated and cached artifacts                    |
+## Opening the PR
+
+The [pull request template](.github/PULL_REQUEST_TEMPLATE.md) asks for
+user journey, prior art, and a prototype — reviewers will look for these.
+
+## Driving a PR forward
+
+Design questions and proposals are best discussed with the
+[GenAI SIG](https://github.com/open-telemetry/community#sig-genai-instrumentation).
+When a PR needs more eyes, post in
+[#otel-genai-instrumentation](https://cloud-native.slack.com/archives/C06KR7ARS3X)
+on [CNCF Slack](https://slack.cncf.io/) or raise it at the next SIG meeting.
+
+If the review surfaces contentious or difficult points, consider splitting
+them into follow-up PRs so the uncontroversial parts can land and each
+harder point gets its own focused discussion and review.
