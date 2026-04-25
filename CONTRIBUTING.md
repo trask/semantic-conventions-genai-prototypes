@@ -42,10 +42,6 @@ Refer to the
 [Semantic Convention YAML Language](https://github.com/open-telemetry/weaver/blob/main/schemas/semconv-syntax.md)
 to learn about the YAML file syntax.
 
-Every group and attribute must declare a `stability:` level. New
-proposals should start at `development`. Promotion to `release_candidate`
-or `stable` should be a separate PR.
-
 ### 2. Regenerate the docs
 
 After updating the YAML, run:
@@ -55,8 +51,8 @@ make generate-docs
 ```
 
 This regenerates the attribute registry pages under `docs/registry/` and
-refreshes the generated tables embedded in the hand-written docs (e.g.
-`docs/gen-ai/gen-ai-spans.md`).
+refreshes the generated tables embedded in the hand-written docs under
+`docs/gen-ai/`.
 
 ### 3. Validate
 
@@ -68,13 +64,13 @@ make check-policies
 
 This validates the model against shared OpenTelemetry policies covering
 naming conventions, attribute type rules, stability requirements, and
-backwards-compatibility.
+backwards compatibility.
 
 ### 4. Update reference scenarios
 
 Changes under `model/` or `docs/` typically require updating the
-reference scenarios under `reference/` in order to demonstrate
-the capturability of the proposed updates. See
+reference scenarios under `reference/` to demonstrate that the proposed
+updates are capturable. See
 [reference/CONTRIBUTING.md](reference/CONTRIBUTING.md).
 
 ### 5. Update the changelog
@@ -83,11 +79,6 @@ Add an entry under `Unreleased` in [CHANGELOG.md](CHANGELOG.md) for any
 change a consumer of these conventions would need to notice. Editorial
 changes (typos, rewording, non-normative clarifications) don't need an
 entry.
-
-### 6. Open the PR
-
-The [pull request template](.github/PULL_REQUEST_TEMPLATE.md) asks for
-user journey, prior art, and a prototype — reviewers will look for these.
 
 ## Keep PRs small
 
