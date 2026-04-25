@@ -12,19 +12,7 @@ using [OTel Weaver](https://github.com/open-telemetry/weaver) and writes the
 per-library results to `scenarios/<library>/data.json`, which feed the status
 reports below.
 
-## Quick start
-
-From this directory (requires [uv](https://docs.astral.sh/uv/); uv will fetch Python 3.12 on first run):
-
-```bash
-uv sync                             # create .venv and install tooling
-uv run run-scenario openai          # one library
-uv run run-scenario --all           # all libraries
-```
-
-Weaver is installed automatically on first run. See
-[CONTRIBUTING.md](CONTRIBUTING.md) for project structure, the full command
-list, and guidance on adding or updating a library.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for how to run scenarios and add new libraries.
 
 ## Reports
 
