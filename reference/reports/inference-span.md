@@ -40,6 +40,7 @@
 | gen_ai.usage.cache_read.input_tokens | [anthropic] |
 | gen_ai.usage.input_tokens | [anthropic], [autogen], [aws-bedrock], [azure-ai-inference], [azure-openai], [cohere], [crewai], [dspy], [google-adk], [google-genai], [groq], [instructor], [litellm], [llamaindex], [mistralai], [openai], [openai-agents], [pydantic-ai], [vertexai] |
 | gen_ai.usage.output_tokens | [anthropic], [autogen], [aws-bedrock], [azure-ai-inference], [azure-openai], [cohere], [crewai], [dspy], [google-adk], [google-genai], [groq], [instructor], [litellm], [llamaindex], [mistralai], [openai], [openai-agents], [pydantic-ai], [vertexai] |
+| gen_ai.usage.reasoning.output_tokens | (none) |
 | server.address | [anthropic], [autogen], [aws-bedrock], [azure-ai-inference], [azure-openai], [cohere], [crewai], [google-adk], [llamaindex], [mistralai], [openai], [openai-agents], [pydantic-ai] |
 
 ## Opt-In

@@ -38,6 +38,7 @@
 | gen_ai.usage.cache_read.input_tokens | [anthropic] |
 | gen_ai.usage.input_tokens | [anthropic], [autogen], [aws-bedrock], [azure-ai-inference], [cohere], [dspy], [google-genai], [groq], [instructor], [litellm], [llamaindex], [mistralai], [openai], [pydantic-ai], [vertexai] |
 | gen_ai.usage.output_tokens | [anthropic], [autogen], [aws-bedrock], [azure-ai-inference], [cohere], [dspy], [google-genai], [groq], [instructor], [litellm], [llamaindex], [mistralai], [openai], [pydantic-ai], [vertexai] |
+| gen_ai.usage.reasoning.output_tokens | (none) |
 | server.address | [anthropic], [autogen], [azure-ai-inference], [openai], [pydantic-ai] |
 
 ## Opt-In
