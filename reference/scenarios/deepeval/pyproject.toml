@@ -5,7 +5,7 @@ requires-python = ">=3.12"
 dependencies = [
     "deepeval==3.9.9",
     "langchain==0.3.28",
-    "openai==2.32.0",
+    "openai==2.33.0",
     "genai-reference-shared",
 ]
 
