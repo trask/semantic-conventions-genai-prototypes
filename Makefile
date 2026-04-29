@@ -49,6 +49,14 @@ SC_UPSTREAM_STAMP := $(SC_UPSTREAM_FILTERED)/.stamp-$(SEMCONV_VERSION)
 # from the filtered copy so their group ids do not collide with ours.
 SC_UPSTREAM_MIGRATED_DIRS := gen-ai mcp openai
 
+# Group-level migrations: upstream namespaces where we own only a subset of
+# the groups inside a shared registry file. Each entry is `<file>:<group_id>`,
+# relative to upstream `model/`. The filtered upstream copy has each listed
+# group stripped from its file so Weaver does not see two definitions of the
+# same group id. Keep in sync with `GROUP_IMPORTS` in
+# `internal/tools/overwrite_model_from_upstream.py`.
+SC_UPSTREAM_MIGRATED_GROUPS := aws/registry.yaml:registry.aws.bedrock
+
 .PHONY: check-policies generate-docs resolve clean filter-upstream fix-external-links
 
 # Pinned upstream GitHub URL base, used by fix-external-links to rewrite doc
@@ -60,9 +68,9 @@ UPSTREAM_DOCS_BASE := https://github.com/open-telemetry/semantic-conventions/blo
 # rewritten by fix-external-links to a pinned upstream GitHub URL so GitHub
 # resolves it (Hugo renders it via registry_base_url). Expand when upstream
 # shared namespaces start appearing in new generated snippets. Local namespaces
-# (gen-ai, mcp, openai) are listed as files under docs/attributes/ and stay
-# relative.
-UPSTREAM_ATTR_NAMESPACES := aws azure client error exception jsonrpc network rpc server
+# (gen-ai, mcp, openai, aws via aws-bedrock) are listed as files under
+# docs/attributes/ and stay relative.
+UPSTREAM_ATTR_NAMESPACES := azure client error exception jsonrpc network rpc server
 
 # Work around a Weaver 0.22.1 panic when `registry check` fetches a pinned remote
 # policy pack by commit SHA. Keep the policy source pinned, but materialize it as
@@ -87,6 +95,21 @@ $(SC_UPSTREAM_STAMP): $(VERSION_PINS_FILE)
 		$(SC_UPSTREAM_CHECKOUT)
 	cp -r $(SC_UPSTREAM_CHECKOUT)/model $(SC_UPSTREAM_FILTERED)
 	cd $(SC_UPSTREAM_FILTERED) && rm -rf $(SC_UPSTREAM_MIGRATED_DIRS)
+	@# Strip group-level migrated entries (file:group_id) from the filtered
+	@# upstream copy. Awk slices out each `  - id: <group_id>` block up to the
+	@# next sibling group at the same indent (or EOF), matching the textual
+	@# extraction that internal/tools/overwrite_model_from_upstream.py performs
+	@# in the opposite direction.
+	@for entry in $(SC_UPSTREAM_MIGRATED_GROUPS); do \
+		file=$${entry%%:*}; gid=$${entry##*:}; \
+		target=$(SC_UPSTREAM_FILTERED)/$$file; \
+		if [ -f "$$target" ]; then \
+			awk -v gid="$$gid" 'BEGIN{skip=0} \
+				/^  - id: / { skip = ($$0 == "  - id: " gid) } \
+				!skip { print }' "$$target" > "$$target.tmp" && \
+			mv "$$target.tmp" "$$target"; \
+		fi; \
+	done
 	touch $(SC_UPSTREAM_STAMP)
 
 filter-upstream: $(SC_UPSTREAM_STAMP)

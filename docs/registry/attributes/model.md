@@ -3,10 +3,22 @@
 
 # Model
 
+- [Model AWS Bedrock Attributes](#model-aws-bedrock-attributes)
 - [Model Gen AI Attributes](#model-gen-ai-attributes)
 - [Model MCP Attributes](#model-mcp-attributes)
 - [Model OpenAI Attributes](#model-openai-attributes)
 - [Model Gen AI Deprecated Registry Deprecated Attributes](#model-gen-ai-deprecated-registry-deprecated-attributes)
+
+## Model AWS Bedrock Attributes
+
+<synthetic v2>
+
+**Attributes:**
+
+| Key | Stability | Value Type | Description | Example Values |
+| --- | --- | --- | --- | --- |
+| <a id="aws-bedrock-guardrail-id" href="#aws-bedrock-guardrail-id">`aws.bedrock.guardrail.id`</a> | ![Development](https://img.shields.io/badge/-development-blue) | string | The unique identifier of the AWS Bedrock Guardrail. A [guardrail](https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails.html) helps safeguard and prevent unwanted behavior from model responses or user messages. | `sgi5gkybzqak` |
+| <a id="aws-bedrock-knowledge-base-id" href="#aws-bedrock-knowledge-base-id">`aws.bedrock.knowledge_base.id`</a> | ![Development](https://img.shields.io/badge/-development-blue) | string | The unique identifier of the AWS Bedrock Knowledge base. A [knowledge base](https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base.html) is a bank of information that can be queried by models to generate more relevant responses and augment prompts. | `XFWUPB9PAW` |
 
 ## Model Gen AI Attributes
 
