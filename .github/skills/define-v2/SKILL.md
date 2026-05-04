@@ -139,7 +139,8 @@ for which keys are overridable on which signals).
 If you are tempted to declare the variant as a brand-new signal in `spans:`
 and `ref_group:` the parent's attribute group(s), stop and use a refinement
 instead. The attribute-group form loses the explicit "this implements
-that" relationship and produces noisier resolved output.
+that" relationship and produces noisier resolved output. The same applies
+to implicit signal groups (`ref_group: span.<parent>`); see Rule 6.
 
 ### 5. Override on the signal, not on the attribute
 
@@ -151,6 +152,33 @@ which keys are overridable per signal type.
 Do not duplicate the underlying attribute's `brief` / `note` verbatim —
 leave them out so the inherited values show through. Use an empty string
 (`note: ""`) only when you genuinely want to suppress an inherited note.
+
+### 6. Implicit signal groups
+
+Weaver exposes each signal's full attribute set — every override and
+every inlined ref — as an implicit attribute group named `span.<type>`,
+`metric.<name>`, or `event.<name>`. This is not in the upstream syntax
+doc; treat it as undocumented behavior and verify with `make package`
+whenever you rely on it.
+
+The legitimate use is **cross-signal mirroring**: an event (or other
+signal) whose attribute set must track another signal's exactly. For
+example, `gen_ai.client.inference.operation.details` (an event) uses
+`ref_group: span.gen_ai.inference.client` so it picks up every override
+and added attribute the span declaration carries. The alternative —
+re-stating every `ref_group` and per-attribute override — drifts the
+moment the span gains or loses an attribute.
+
+Do **not** use this mechanism inside a new signal declared under
+`spans:` / `metrics:` / `events:` to clone a generic signal's attribute
+set. That is Rule 4's anti-pattern with different surface syntax —
+declare the variant in `*_refinements` instead. Symptoms that you are
+about to drift here:
+
+- A `spans:` entry whose `attributes:` is `ref_group: span.<other_type>`
+  followed by a small delta.
+- A new internal attribute group named `attributes.<provider>.<thing>`
+  whose only purpose is to hold that delta.
 
 ## Refinement Decision Tree
 

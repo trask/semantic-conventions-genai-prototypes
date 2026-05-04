@@ -9,7 +9,7 @@ events:
       independently from traces.
     stability: development
     attributes:
-      - ref_group: attributes.gen_ai.inference.client
+      - ref_group: span.gen_ai.inference.client
   - name: gen_ai.evaluation.result
     brief: >
       This event captures the result of evaluating GenAI output for quality, accuracy, or other characteristics.
