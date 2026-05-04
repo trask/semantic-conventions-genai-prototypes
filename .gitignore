@@ -1,6 +1,4 @@
 .build/
-# Scratch output of `make package` (committed snapshot lives under ./schema-snapshot)
-resolved/
 __pycache__/
 .venv/
 *.egg-info/
