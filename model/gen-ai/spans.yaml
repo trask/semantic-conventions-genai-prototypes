@@ -136,7 +136,7 @@ attribute_groups:
     attributes:
       - ref: gen_ai.output.type
         note: |  # TODO https://github.com/open-telemetry/weaver/pull/1407
-          This attribute SHOULD be set to the output type requested by the client123:
+          This attribute SHOULD be set to the output type requested by the client:
 
           - `json` for structured outputs with defined or undefined schema
           - `image` for image output
