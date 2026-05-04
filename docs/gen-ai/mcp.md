@@ -142,8 +142,6 @@ Instead, it SHOULD add MCP-specific attributes to the existing tool execution sp
 Instrumentations that support this behavior MAY provide a configuration
 option to enable it.
 
-**Span name** SHOULD be mcp.client. <!-- TODO https://github.com/open-telemetry/weaver/pull/1401 -->
-
 **Span kind** SHOULD be `CLIENT`.
 
 **Attributes:**
@@ -313,8 +311,6 @@ The status description SHOULD match the `JSONRPCError.message` if the message is
 
 Refer to the [Recording Errors](/docs/general/recording-errors.md) document
 for more details.
-
-**Span name** SHOULD be mcp.server. <!-- TODO https://github.com/open-telemetry/weaver/pull/1401 -->
 
 **Span kind** SHOULD be `SERVER`.
 

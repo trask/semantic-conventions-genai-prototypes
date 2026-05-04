@@ -4,12 +4,11 @@
    (e.g. "**Span name** SHOULD be `{gen_ai.operation.name} {gen_ai.request.model}`."). #}
 {% import 'stability.j2' as stability %}
 
-{# Until weaver PR 1401 ships, `span.name.note` collapses to the span's id
-   instead of carrying the model-defined markdown (e.g.
-   "**Span name** SHOULD be `{gen_ai.operation.name} {gen_ai.request.model}`.").
-   We render the field as-is plus an inline TODO so the regression is visible
-   in generated docs. Once WEAVER_VERSION moves past the PR, drop the TODO
-   and trim the wrapper down to `{{ span.name.note }}`. #}
+{# Span-name rendering is disabled until weaver PR 1401 ships:
+   https://github.com/open-telemetry/weaver/pull/1401
+   Until then `span.name.note` collapses to the span's id instead of the
+   model-defined markdown, so the output would be wrong. Re-enable the
+   `if span.name and span.name.note` block below once weaver is upgraded. #}
 {% macro header(span) -%}
 **Status:** {{ stability.badge(span.stability, span.deprecated) }}
 
@@ -17,9 +16,9 @@
 {%- if span.note %}
 
 {{ span.note | trim }}{% endif %}
-{%- if span.name and span.name.note %}
+{#- if span.name and span.name.note %}
 
-**Span name** SHOULD be {{ span.name.note | trim }}. <!-- TODO https://github.com/open-telemetry/weaver/pull/1401 -->{% endif %}
+**Span name** SHOULD be {{ span.name.note | trim }}.{% endif #}
 {%- if "**Span kind" not in (span.note or "") %}
 
 **Span kind** SHOULD be `{{ span.kind | upper }}`.{% endif %}

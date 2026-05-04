@@ -57,8 +57,6 @@ Semantic Conventions for [Anthropic](https://www.anthropic.com/) client spans ex
 
 **Span name** SHOULD be `{gen_ai.operation.name} {gen_ai.request.model}`.
 
-**Span name** SHOULD be anthropic.inference.client. <!-- TODO https://github.com/open-telemetry/weaver/pull/1401 -->
-
 **Span kind** SHOULD be `CLIENT`.
 
 **Span status** SHOULD follow the [Recording Errors](https://github.com/open-telemetry/semantic-conventions/blob/v1.41.0/docs/general/recording-errors.md) document.

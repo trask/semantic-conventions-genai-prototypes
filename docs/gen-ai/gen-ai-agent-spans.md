@@ -64,8 +64,6 @@ The `gen_ai.operation.name` SHOULD be `create_agent`.
 **Span name** SHOULD be `create_agent {gen_ai.agent.name}`.
 Semantic conventions for individual GenAI systems and frameworks MAY specify different span name format.
 
-**Span name** SHOULD be gen_ai.create_agent.client. <!-- TODO https://github.com/open-telemetry/weaver/pull/1401 -->
-
 **Span kind** SHOULD be `CLIENT`.
 
 **Span status** SHOULD follow the [Recording Errors](https://github.com/open-telemetry/semantic-conventions/blob/v1.41.0/docs/general/recording-errors.md) document.
@@ -200,8 +198,6 @@ When `gen_ai.agent.name` is not available, it SHOULD be `invoke_agent`.
 Semantic conventions for individual GenAI systems and frameworks MAY specify different span name format.
 
 Examples: OpenAI Assistants API, AWS Bedrock Agents.
-
-**Span name** SHOULD be gen_ai.invoke_agent.client. <!-- TODO https://github.com/open-telemetry/weaver/pull/1401 -->
 
 **Span kind** SHOULD be `CLIENT`.
 
@@ -464,8 +460,6 @@ Semantic conventions for individual GenAI systems and frameworks MAY specify dif
 
 Examples: LangChain agents, CrewAI agents.
 
-**Span name** SHOULD be gen_ai.invoke_agent.internal. <!-- TODO https://github.com/open-telemetry/weaver/pull/1401 -->
-
 **Span kind** SHOULD be `INTERNAL`.
 
 **Span status** SHOULD follow the [Recording Errors](https://github.com/open-telemetry/semantic-conventions/blob/v1.41.0/docs/general/recording-errors.md) document.
@@ -722,8 +716,6 @@ eg: Some frameworks like ADK have workflow agents that orchestrate other agents
 and report `invoke_agent` spans, so `invoke_workflow` SHOULD NOT be reported by such instrumentations.
 Conversely, frameworks like CrewAI have a distinct concept of crew (similar to workflow)
 that is separate from individual agents, so they SHOULD report `invoke_workflow` spans.
-
-**Span name** SHOULD be gen_ai.invoke_workflow.internal. <!-- TODO https://github.com/open-telemetry/weaver/pull/1401 -->
 
 **Span kind** SHOULD be `INTERNAL`.
 

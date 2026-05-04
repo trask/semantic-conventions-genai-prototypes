@@ -46,8 +46,6 @@ attributes and ones specific the AWS Bedrock.
 
 Describes an AWS Bedrock operation span.
 
-**Span name** SHOULD be aws.bedrock.client. <!-- TODO https://github.com/open-telemetry/weaver/pull/1401 -->
-
 **Span kind** SHOULD be `CLIENT`.
 
 **Span status** SHOULD follow the [Recording Errors](https://github.com/open-telemetry/semantic-conventions/blob/v1.41.0/docs/general/recording-errors.md) document.

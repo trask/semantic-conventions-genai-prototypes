@@ -55,8 +55,6 @@ Semantic Conventions for [Azure AI Inference](https://learn.microsoft.com/rest/a
 
 `gen_ai.provider.name` MUST be set to `"azure.ai.inference"` and SHOULD be provided **at span creation time**.
 
-**Span name** SHOULD be azure.ai.inference.client. <!-- TODO https://github.com/open-telemetry/weaver/pull/1401 -->
-
 **Span kind** SHOULD be `CLIENT`.
 
 **Span status** SHOULD follow the [Recording Errors](https://github.com/open-telemetry/semantic-conventions/blob/v1.41.0/docs/general/recording-errors.md) document.

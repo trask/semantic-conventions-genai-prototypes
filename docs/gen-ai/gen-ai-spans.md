@@ -55,16 +55,14 @@ linkTitle: Spans
 
 This span represents a client call to Generative AI model or service that generates a response or requests a tool call based on the input prompt.
 
-**Span kind** SHOULD be `CLIENT` and MAY be set to `INTERNAL` on spans representing
-call to models running in the same process. It's RECOMMENDED to use `CLIENT` kind
-when the GenAI system being instrumented usually runs in a different process than its
-client or when the GenAI call happens over instrumented protocol such as HTTP.
-
 **Span name** SHOULD be `{gen_ai.operation.name} {gen_ai.request.model}`.
 Semantic conventions for individual GenAI systems and frameworks MAY specify different span name format
 and MUST follow the overall [guidelines for span names](https://github.com/open-telemetry/opentelemetry-specification/blob/v1.56.0/specification/trace/api.md#span).
 
-**Span name** SHOULD be gen_ai.inference.client. <!-- TODO https://github.com/open-telemetry/weaver/pull/1401 -->
+**Span kind** SHOULD be `CLIENT` and MAY be set to `INTERNAL` on spans representing
+call to models running in the same process. It's RECOMMENDED to use `CLIENT` kind
+when the GenAI system being instrumented usually runs in a different process than its
+client or when the GenAI call happens over instrumented protocol such as HTTP.
 
 **Span status** SHOULD follow the [Recording Errors](https://github.com/open-telemetry/semantic-conventions/blob/v1.41.0/docs/general/recording-errors.md) document.
 
@@ -324,8 +322,6 @@ Describes GenAI embeddings span - a request to a Generative AI model or service 
 The `gen_ai.operation.name` SHOULD be `embeddings`.
 **Span name** SHOULD be `{gen_ai.operation.name} {gen_ai.request.model}`.
 
-**Span name** SHOULD be gen_ai.embeddings.client. <!-- TODO https://github.com/open-telemetry/weaver/pull/1401 -->
-
 **Span kind** SHOULD be `CLIENT`.
 
 **Span status** SHOULD follow the [Recording Errors](https://github.com/open-telemetry/semantic-conventions/blob/v1.41.0/docs/general/recording-errors.md) document.
@@ -463,8 +459,6 @@ The `gen_ai.operation.name` SHOULD be `retrieval`.
 
 **Span name** SHOULD be `{gen_ai.operation.name} {gen_ai.data_source.id}`. Semantic conventions
 for individual GenAI providers and retrievers MAY specify different span name format.
-
-**Span name** SHOULD be gen_ai.retrieval.client. <!-- TODO https://github.com/open-telemetry/weaver/pull/1401 -->
 
 **Span kind** SHOULD be `CLIENT`.
 
@@ -611,8 +605,6 @@ Tools are often executed directly by application code. Application developers
 are encouraged to follow this semantic convention for tools invoked by their
 own code and to manually instrument any tool calls that automatic
 instrumentations do not cover.
-
-**Span name** SHOULD be gen_ai.execute_tool.internal. <!-- TODO https://github.com/open-telemetry/weaver/pull/1401 -->
 
 **Span kind** SHOULD be `INTERNAL`.
 
