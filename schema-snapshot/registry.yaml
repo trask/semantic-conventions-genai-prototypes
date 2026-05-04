@@ -857,6 +857,8 @@ refinements:
     - brief: The name of the GenAI model a request is being made to.
       examples: gpt-4
       key: gen_ai.request.model
+      note: |
+        The name of the GenAI model a request is being made to. If the model is supplied by a vendor, then the value must be the exact name of the model requested. If the model is a fine-tuned custom model, the value should have a more specific name than the base model that\u0027s been fine-tuned.
       provenance:
         path: ./model/gen-ai/registry.yaml
       requirement_level:
@@ -1049,6 +1051,8 @@ refinements:
     - brief: The name of the GenAI model a request is being made to.
       examples: gpt-4
       key: gen_ai.request.model
+      note: |
+        The name of the GenAI model a request is being made to. If the model is supplied by a vendor, then the value must be the exact name of the model requested. If the model is a fine-tuned custom model, the value should have a more specific name than the base model that\u0027s been fine-tuned.
       provenance:
         path: ./model/gen-ai/registry.yaml
       requirement_level:
@@ -1244,6 +1248,8 @@ refinements:
     - brief: The name of the GenAI model a request is being made to.
       examples: gpt-4
       key: gen_ai.request.model
+      note: |
+        The name of the GenAI model a request is being made to. If the model is supplied by a vendor, then the value must be the exact name of the model requested. If the model is a fine-tuned custom model, the value should have a more specific name than the base model that\u0027s been fine-tuned.
       provenance:
         path: ./model/gen-ai/registry.yaml
       requirement_level:
@@ -1438,6 +1444,8 @@ refinements:
     - brief: The name of the GenAI model a request is being made to.
       examples: gpt-4
       key: gen_ai.request.model
+      note: |
+        The name of the GenAI model a request is being made to. If the model is supplied by a vendor, then the value must be the exact name of the model requested. If the model is a fine-tuned custom model, the value should have a more specific name than the base model that\u0027s been fine-tuned.
       provenance:
         path: ./model/gen-ai/registry.yaml
       requirement_level:
@@ -1679,6 +1687,8 @@ refinements:
     - brief: The name of the GenAI model a request is being made to.
       examples: gpt-4
       key: gen_ai.request.model
+      note: |
+        The name of the GenAI model a request is being made to. If the model is supplied by a vendor, then the value must be the exact name of the model requested. If the model is a fine-tuned custom model, the value should have a more specific name than the base model that\u0027s been fine-tuned.
       provenance:
         path: ./model/gen-ai/registry.yaml
       requirement_level:
@@ -1871,6 +1881,8 @@ refinements:
     - brief: The name of the GenAI model a request is being made to.
       examples: gpt-4
       key: gen_ai.request.model
+      note: |
+        The name of the GenAI model a request is being made to. If the model is supplied by a vendor, then the value must be the exact name of the model requested. If the model is a fine-tuned custom model, the value should have a more specific name than the base model that\u0027s been fine-tuned.
       provenance:
         path: ./model/gen-ai/registry.yaml
       requirement_level:
@@ -2063,6 +2075,8 @@ refinements:
     - brief: The name of the GenAI model a request is being made to.
       examples: gpt-4
       key: gen_ai.request.model
+      note: |
+        The name of the GenAI model a request is being made to. If the model is supplied by a vendor, then the value must be the exact name of the model requested. If the model is a fine-tuned custom model, the value should have a more specific name than the base model that\u0027s been fine-tuned.
       provenance:
         path: ./model/gen-ai/registry.yaml
       requirement_level:
@@ -3247,6 +3261,8 @@ refinements:
     - brief: The name of the GenAI model a request is being made to.
       examples: gpt-4
       key: gen_ai.request.model
+      note: |
+        The name of the GenAI model a request is being made to. If the model is supplied by a vendor, then the value must be the exact name of the model requested. If the model is a fine-tuned custom model, the value should have a more specific name than the base model that\u0027s been fine-tuned.
       provenance:
         path: ./model/gen-ai/registry.yaml
       requirement_level:
@@ -3459,6 +3475,8 @@ refinements:
     - brief: The name of the GenAI model a request is being made to.
       examples: gpt-4
       key: gen_ai.request.model
+      note: |
+        The name of the GenAI model a request is being made to. If the model is supplied by a vendor, then the value must be the exact name of the model requested. If the model is a fine-tuned custom model, the value should have a more specific name than the base model that\u0027s been fine-tuned.
       provenance:
         path: ./model/gen-ai/registry.yaml
       requirement_level:
@@ -12127,6 +12145,8 @@ registry:
     - brief: The name of the GenAI model a request is being made to.
       examples: gpt-4
       key: gen_ai.request.model
+      note: |
+        The name of the GenAI model a request is being made to. If the model is supplied by a vendor, then the value must be the exact name of the model requested. If the model is a fine-tuned custom model, the value should have a more specific name than the base model that\u0027s been fine-tuned.
       provenance:
         path: ./model/gen-ai/registry.yaml
       requirement_level:
@@ -12318,6 +12338,8 @@ registry:
     - brief: The name of the GenAI model a request is being made to.
       examples: gpt-4
       key: gen_ai.request.model
+      note: |
+        The name of the GenAI model a request is being made to. If the model is supplied by a vendor, then the value must be the exact name of the model requested. If the model is a fine-tuned custom model, the value should have a more specific name than the base model that\u0027s been fine-tuned.
       provenance:
         path: ./model/gen-ai/registry.yaml
       requirement_level:
@@ -12512,6 +12534,8 @@ registry:
     - brief: The name of the GenAI model a request is being made to.
       examples: gpt-4
       key: gen_ai.request.model
+      note: |
+        The name of the GenAI model a request is being made to. If the model is supplied by a vendor, then the value must be the exact name of the model requested. If the model is a fine-tuned custom model, the value should have a more specific name than the base model that\u0027s been fine-tuned.
       provenance:
         path: ./model/gen-ai/registry.yaml
       requirement_level:
@@ -12705,6 +12729,8 @@ registry:
     - brief: The name of the GenAI model a request is being made to.
       examples: gpt-4
       key: gen_ai.request.model
+      note: |
+        The name of the GenAI model a request is being made to. If the model is supplied by a vendor, then the value must be the exact name of the model requested. If the model is a fine-tuned custom model, the value should have a more specific name than the base model that\u0027s been fine-tuned.
       provenance:
         path: ./model/gen-ai/registry.yaml
       requirement_level:
@@ -12945,6 +12971,8 @@ registry:
     - brief: The name of the GenAI model a request is being made to.
       examples: gpt-4
       key: gen_ai.request.model
+      note: |
+        The name of the GenAI model a request is being made to. If the model is supplied by a vendor, then the value must be the exact name of the model requested. If the model is a fine-tuned custom model, the value should have a more specific name than the base model that\u0027s been fine-tuned.
       provenance:
         path: ./model/gen-ai/registry.yaml
       requirement_level:
@@ -13136,6 +13164,8 @@ registry:
     - brief: The name of the GenAI model a request is being made to.
       examples: gpt-4
       key: gen_ai.request.model
+      note: |
+        The name of the GenAI model a request is being made to. If the model is supplied by a vendor, then the value must be the exact name of the model requested. If the model is a fine-tuned custom model, the value should have a more specific name than the base model that\u0027s been fine-tuned.
       provenance:
         path: ./model/gen-ai/registry.yaml
       requirement_level:
@@ -13327,6 +13357,8 @@ registry:
     - brief: The name of the GenAI model a request is being made to.
       examples: gpt-4
       key: gen_ai.request.model
+      note: |
+        The name of the GenAI model a request is being made to. If the model is supplied by a vendor, then the value must be the exact name of the model requested. If the model is a fine-tuned custom model, the value should have a more specific name than the base model that\u0027s been fine-tuned.
       provenance:
         path: ./model/gen-ai/registry.yaml
       requirement_level:

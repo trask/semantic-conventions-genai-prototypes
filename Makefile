@@ -53,8 +53,7 @@ SC_UPSTREAM_MIGRATED_DIRS := gen-ai mcp openai
 # the groups inside a shared registry file. Each entry is `<file>:<group_id>`,
 # relative to upstream `model/`. The filtered upstream copy has each listed
 # group stripped from its file so Weaver does not see two definitions of the
-# same group id. Keep in sync with `GROUP_IMPORTS` in
-# `internal/tools/overwrite_model_from_upstream.py`.
+# same group id.
 SC_UPSTREAM_MIGRATED_GROUPS := aws/registry.yaml:registry.aws.bedrock
 
 .PHONY: check-policies schema-snapshot generate-registry generate-docs package generate-all clean filter-upstream
@@ -78,9 +77,7 @@ $(SC_UPSTREAM_STAMP): $(VERSION_PINS_FILE)
 	cd $(SC_UPSTREAM_FILTERED) && rm -rf $(SC_UPSTREAM_MIGRATED_DIRS)
 	@# Strip group-level migrated entries (file:group_id) from the filtered
 	@# upstream copy. Awk slices out each `  - id: <group_id>` block up to the
-	@# next sibling group at the same indent (or EOF), matching the textual
-	@# extraction that internal/tools/overwrite_model_from_upstream.py performs
-	@# in the opposite direction.
+	@# next sibling group at the same indent (or EOF).
 	@for entry in $(SC_UPSTREAM_MIGRATED_GROUPS); do \
 		file=$${entry%%:*}; gid=$${entry##*:}; \
 		target=$(SC_UPSTREAM_FILTERED)/$$file; \
@@ -172,6 +169,7 @@ schema-snapshot: $(SC_UPSTREAM_STAMP)
 clean:
 	rm -rf docs/registry
 	rm -rf resolved
+	rm -rf schema-snapshot
 	rm -rf .build
 	rm -rf reference/.cache
 	find . -type d -name __pycache__ -prune -exec rm -rf {} +

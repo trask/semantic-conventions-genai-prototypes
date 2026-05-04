@@ -3,21 +3,13 @@ attribute_groups:
   - id: metric_attributes.gen_ai
     visibility: internal
     attributes:
-      - ref_group: attributes.gen_ai.server
+      - ref_group: attributes.gen_ai.address_and_port
+      - ref_group: attributes.gen_ai.common
       - ref: gen_ai.response.model
         requirement_level: recommended
-      - ref: gen_ai.request.model
-        requirement_level:
-          conditionally_required: If available.
       - ref: gen_ai.provider.name
         requirement_level: required
-      - ref: gen_ai.operation.name
-        requirement_level: required
-  - id: metric_attributes.gen_ai.server
-    visibility: internal
-    attributes:
-      - ref_group: metric_attributes.gen_ai
-      - ref_group: attributes.gen_ai.error
+
   - id: metric_attributes.openai
     visibility: internal
     attributes:
@@ -83,7 +75,8 @@ metrics:
       code_generation:
         metric_value_type: double
     attributes:
-      - ref_group: metric_attributes.gen_ai.server
+      - ref_group: metric_attributes.gen_ai
+      - ref_group: attributes.gen_ai.error
   - name: gen_ai.server.time_per_output_token
     instrument: histogram
     unit: "s"
@@ -114,6 +107,7 @@ metric_refinements:
       when the provider is `openai`.
     stability: development
     attributes:
+      # - ref_group: metric_attributes.openai - does not work, https://github.com/open-telemetry/weaver/issues/1411
       - ref: openai.response.service_tier
         requirement_level: recommended
       - ref: openai.response.system_fingerprint
@@ -126,6 +120,7 @@ metric_refinements:
       when the provider is `openai`.
     stability: development
     attributes:
+      # - ref_group: metric_attributes.openai - does not work, https://github.com/open-telemetry/weaver/issues/1411
       - ref: openai.response.service_tier
         requirement_level: recommended
       - ref: openai.response.system_fingerprint

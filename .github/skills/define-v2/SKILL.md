@@ -45,8 +45,9 @@ shape the structure around them.
   plus inlined per-signal attributes over a hierarchy of groups that each
   add one attribute.
 - Internal by default. Authoring groups are infrastructure; only public
-  attribute groups should be `visibility: public` (if group is intended for public consumption,
-  and intent is demonstrated by using the group in markdown snippets).
+  attribute groups should be `visibility: public` (if the group is intended
+  for public consumption, and that intent is demonstrated by using the group
+  in markdown snippets).
 - Validate every change by running the host repo's package target
   (typically `make package`) before considering the work done.
 
@@ -78,32 +79,32 @@ Only create an `attribute_groups` entry when the *same exact set* of
 attributes is reused by two or more signals. A group used by exactly one
 signal is dead weight — inline the attributes on the signal directly.
 
-Avoid creating attribute_group with one attribute.
+Avoid creating an attribute group with only one attribute.
 
 ### 2. Internal by default
 
 Every authoring `attribute_groups` entry MUST have `visibility: internal`
-unless the group is genuinely a public registry entity. Public groups
+unless the group is genuinely a public group. Public groups
 carry stricter required-key obligations (see the syntax doc); if you
 don't need those, you don't want a public group.
 
-Concretely, human-authored docs render attribute tables by referencing
-groups in `<!-- semconv <group_id> -->` markers, which `weaver registry
-update-markdown` rewrites in place (typically wrapped by a `make
-generate-docs` target or equivalent). Being snippet-rendered is a signal
-that a group is user-facing — but it is not by itself sufficient: an
-`internal` group can also be embedded in a snippet, and visibility does
-not gate rendering. The sharper test: if you would naturally write a
-`brief` and pick a `stability` for the group *as a thing in its own
-right* (something users link to or reference outside the snippet that
-embeds it), it is public. If it exists only to compose attributes for
-one or two signals — even if those signals' docs render its table —
-keep it internal.
+Being rendered in a `<!-- semconv <group_id> -->` markdown snippet does
+not by itself make a group public — visibility does not gate rendering,
+and `internal` groups can be embedded too. The sharper test: if you
+would naturally write a `brief` and pick a `stability` for the group
+*as a thing in its own right* (something users link to or reference
+outside the snippet that embeds it), it is public. If it exists only
+to compose attributes for one or two signals, keep it internal.
 
 ### 3. Flat structure
 
-A `ref_group` chain deeper than two levels (`base → mid → leaf`) is a
-refactor signal. Two levels is the maximum:
+A `ref_group` chain deeper than one level (`base → leaf`) is a
+refactor signal. Two levels may be used as an exception when necessary,
+but one level is preferred.
+
+Within an `attributes:` list, list every `ref_group` entry before any
+`ref` entry — the group's own attributes should appear after the
+inherited ones, not interleaved with them.
 
 ```yaml
 attribute_groups:
@@ -119,7 +120,7 @@ attribute_groups:
       - ref: <attr.b>
 ```
 
-If you are reaching for a third level, the right move is almost always to
+If you are reaching for a second level, the right move is almost always to
 flatten groups, or to split the leaves so they each ref the base group
 directly and inline their delta.
 
