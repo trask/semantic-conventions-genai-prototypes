@@ -7,104 +7,94 @@ argument-hint: 'Describe the new or modified span/metric/event/entity and which 
 # Define v2
 
 Use this skill when adding or changing a weaver v2 definition file
-(`file_format: definition/2` or `file_format: definition/2.*`) — spans, metrics, events, entities, attribute
-groups, or signal refinements — in any semantic-conventions registry.
+(`file_format: definition/2` or `file_format: definition/2.*`) — spans,
+metrics, events, entities, attribute groups, or signal refinements — in
+any semantic-conventions registry.
 
 ## Goal
 
 Produce a v2 definition that is minimal, flat, and resolvable by weaver
-without errors.
-
-The result should reuse existing signals and attribute groups wherever
-possible, declare a new attribute group only when two or more signals
-genuinely share the same attribute set, and express
+without errors. Reuse existing signals and attribute groups, and express
 "signal X is an implementation of generic signal Y" as an explicit
 refinement rather than a copy of Y's attributes.
 
-## Non-Goals
-
-This skill is not for deciding *whether* a new convention should be added,
-or for arguing about attribute names, requirement levels, or stability —
-those are upstream design questions. Once that decision is made, this skill
-turns it into well-shaped v2 yaml.
-
-This skill is also not a generator. It does not write attribute names,
-descriptions, examples, or notes for you. Bring those, and the skill will
-shape the structure around them.
-
-## Core Stance
-
-- Reuse before redeclare. If a signal or attribute group with the right
-  shape already exists in the registry, reference it.
-- Refinement before re-declaration. If the new signal is an
-  implementation-specific variant of a signal already defined in this
-  registry, declare it as a refinement (`span_refinements`,
-  `metric_refinements`, `event_refinements`, `entity_refinements`) and add
-  only the delta. Do not copy attributes from the parent.
-- Fewest groups that explain the structure. Prefer one shared base group
-  plus inlined per-signal attributes over a hierarchy of groups that each
-  add one attribute.
-- Internal by default. Authoring groups are infrastructure; only public
-  attribute groups should be `visibility: public` (if the group is intended
-  for public consumption, and that intent is demonstrated by using the group
-  in markdown snippets).
-- Validate every change by running the host repo's package target
-  (typically `make package`) before considering the work done.
+This skill is not for deciding *whether* a convention should be added or
+arguing about attribute names, requirement levels, or stability — those
+are upstream design questions. It is also not a generator: bring the
+names, descriptions, and examples; the skill shapes the structure around
+them.
 
 ## Schema Reference
 
 This skill encodes opinions, not the v2 grammar. For top-level sections,
 required keys per signal, valid `kind` / `instrument` / `stability` /
-`requirement_level` values, override rules, and everything else about
-what is or isn't legal yaml — read the doc directly. Always.
+`requirement_level` values, and override rules — read the doc directly:
 
-Fetch the relevant one before any non-trivial change; do not guess at v2
-syntax from memory or copy-paste:
+- [Lifecycle and overview](https://raw.githubusercontent.com/open-telemetry/weaver/main/schemas/semconv-schemas.md)
+- [Authoring syntax reference](https://raw.githubusercontent.com/open-telemetry/weaver/main/schemas/semconv-syntax.v2.md)
 
-- Lifecycle and overview (definition vs. resolved vs. materialized):
-  `https://raw.githubusercontent.com/open-telemetry/weaver/main/schemas/semconv-schemas.md`
-- Authoring syntax reference (every key, type, and validation rule for a
-  `definition/2` file):
-  `https://raw.githubusercontent.com/open-telemetry/weaver/main/schemas/semconv-syntax.v2.md`
+If anything here contradicts the doc, the doc wins.
 
-If anything in this skill contradicts the doc, the doc wins — this file
-intentionally does not mirror the grammar so it cannot rot when upstream
-changes.
+## Known Weaver Limitations
+
+Pinned-weaver behaviors that change what shape is achievable. If you
+find yourself fighting one of these, link the issue in a TODO and use
+the workaround:
+
+- **[weaver#1411](https://github.com/open-telemetry/weaver/issues/1411)** —
+  `ref_group` is silently ignored inside `*_refinements`. Inline the
+  refs on each refinement, even when several share the same delta.
+- **[weaver#1407](https://github.com/open-telemetry/weaver/pull/1407)** —
+  per-attribute `note` overrides on a refinement's `ref:` don't apply
+  for some attributes; workaround is a single-attribute internal group
+  used via `ref_group` from each refinement that needs the override.
+  This is a Rule 1 exception — TODO-link the PR and remove once it lands.
+
+Add to this list when a workaround surfaces; prune when issues close.
 
 ## Authoring Rules
 
 ### 1. Minimal attribute groups
 
 Only create an `attribute_groups` entry when the *same exact set* of
-attributes is reused by two or more signals. A group used by exactly one
-signal is dead weight — inline the attributes on the signal directly.
-
-Avoid creating an attribute group with only one attribute.
+attributes is reused by two or more signals. A group used by exactly
+one signal is dead weight — inline the attributes on the signal
+directly. Avoid creating an attribute group with only one attribute.
 
 ### 2. Internal by default
 
 Every authoring `attribute_groups` entry MUST have `visibility: internal`
-unless the group is genuinely a public group. Public groups
-carry stricter required-key obligations (see the syntax doc); if you
-don't need those, you don't want a public group.
+unless the group is genuinely public. Public groups carry stricter
+required-key obligations (see the syntax doc); if you don't need those,
+you don't want a public group.
 
-Being rendered in a `<!-- semconv <group_id> -->` markdown snippet does
-not by itself make a group public — visibility does not gate rendering,
-and `internal` groups can be embedded too. The sharper test: if you
-would naturally write a `brief` and pick a `stability` for the group
-*as a thing in its own right* (something users link to or reference
-outside the snippet that embeds it), it is public. If it exists only
-to compose attributes for one or two signals, keep it internal.
+Sharper test for public: would you naturally write a `brief` and pick a
+`stability` for the group *as a thing in its own right* (something
+referenced outside the snippet that embeds it)? If it exists only to
+compose attributes for a couple of signals, keep it internal. Being
+rendered in a `<!-- semconv <group_id> -->` snippet is not the test —
+visibility does not gate rendering.
 
 ### 3. Flat structure
 
-A `ref_group` chain deeper than one level (`base → leaf`) is a
-refactor signal. Two levels may be used as an exception when necessary,
-but one level is preferred.
+The [upstream syntax doc](https://github.com/open-telemetry/weaver/blob/main/schemas/semconv-syntax.v2.md#attribute-group-reference)
+says it is *NOT RECOMMENDED* to use `ref_group` on another attribute
+group, citing readability. This registry departs deliberately: many
+GenAI signals share large overlapping subsets (common, address_and_port,
+usage, content, error), and composing them via `ref_group` is the only
+way to keep per-signal yaml short without one mega-group.
+
+Keep the chain shallow:
+
+- **One level** (`base group → signal`) is the default.
+- **Two levels** (`base → composite → signal`) only when 3+ signals
+  share the same composite shape and inlining would duplicate a
+  multi-line block. Justify in review; do not add speculatively.
+- **Three+ levels** — almost never. Treat as a refactor signal.
 
 Within an `attributes:` list, list every `ref_group` entry before any
-`ref` entry — the group's own attributes should appear after the
-inherited ones, not interleaved with them.
+`ref` entry — the group's own attributes appear after the inherited
+ones, not interleaved.
 
 ```yaml
 attribute_groups:
@@ -120,190 +110,125 @@ attribute_groups:
       - ref: <attr.b>
 ```
 
-If you are reaching for a second level, the right move is almost always to
-flatten groups, or to split the leaves so they each ref the base group
-directly and inline their delta.
-
 ### 4. Refinement over redefinition
 
 If the new signal is an implementation-specific variant of a generic
 signal that already exists in this registry, declare it in the matching
-`*_refinements` section (`span_refinements`, `metric_refinements`,
-`event_refinements`, `entity_refinements`) and add only the delta.
+`*_refinements` section and add only the delta.
 
 Refinements inherit the parent's attributes — do **not** re-list them.
 List an inherited attribute only to override its presentation (note,
-brief, requirement_level, examples, sampling_relevant — see the syntax doc
-for which keys are overridable on which signals).
+brief, requirement_level, examples, sampling_relevant — see the syntax
+doc for which keys are overridable per signal type).
 
-If you are tempted to declare the variant as a brand-new signal in `spans:`
-and `ref_group:` the parent's attribute group(s), stop and use a refinement
-instead. The attribute-group form loses the explicit "this implements
-that" relationship and produces noisier resolved output. The same applies
-to implicit signal groups (`ref_group: span.<parent>`); see Rule 6.
+Tempted to declare the variant in `spans:` and `ref_group:` the parent's
+attribute group(s)? Stop and use a refinement. Same applies to implicit
+signal groups (`ref_group: span.<parent>`) — see Rule 6.
 
 ### 5. Override on the signal, not on the attribute
 
-When a signal needs a different `requirement_level`, `note`, `brief`, or
-similar for an inherited attribute, override it at the reference site —
-do not edit the underlying attribute definition. The syntax doc lists
-which keys are overridable per signal type.
-
-Do not duplicate the underlying attribute's `brief` / `note` verbatim —
-leave them out so the inherited values show through. Use an empty string
-(`note: ""`) only when you genuinely want to suppress an inherited note.
+For a different `requirement_level`, `note`, `brief`, etc. on an
+inherited attribute, override at the reference site — do not edit the
+underlying attribute definition. Don't duplicate the inherited
+`brief` / `note` verbatim; leave them out so the inherited values show
+through. Use `note: ""` only when you genuinely want to suppress an
+inherited note.
 
 ### 6. Implicit signal groups
 
 Weaver exposes each signal's full attribute set — every override and
-every inlined ref — as an implicit attribute group named `span.<type>`,
-`metric.<name>`, or `event.<name>`. This is not in the upstream syntax
-doc; treat it as undocumented behavior and verify with `make package`
+every inlined ref — as an implicit group named `span.<type>`,
+`metric.<name>`, or `event.<name>`. This is undocumented in the upstream
+syntax doc; treat as undocumented behavior and verify with `make package`
 whenever you rely on it.
 
-The legitimate use is **cross-signal mirroring**: an event (or other
-signal) whose attribute set must track another signal's exactly. For
-example, `gen_ai.client.inference.operation.details` (an event) uses
+Legitimate use: **cross-signal mirroring**, e.g.
+`gen_ai.client.inference.operation.details` (an event) uses
 `ref_group: span.gen_ai.inference.client` so it picks up every override
-and added attribute the span declaration carries. The alternative —
-re-stating every `ref_group` and per-attribute override — drifts the
-moment the span gains or loses an attribute.
+the span declaration carries. Re-stating each `ref_group` and override
+would drift the moment the span changes.
 
-Do **not** use this mechanism inside a new signal declared under
-`spans:` / `metrics:` / `events:` to clone a generic signal's attribute
-set. That is Rule 4's anti-pattern with different surface syntax —
-declare the variant in `*_refinements` instead. Symptoms that you are
-about to drift here:
+Do **not** use this inside a new signal under
+`spans:` / `metrics:` / `events:` to clone a generic signal — that's
+Rule 4's anti-pattern in different syntax. Use `*_refinements` instead.
+Symptoms that you are about to drift:
 
 - A `spans:` entry whose `attributes:` is `ref_group: span.<other_type>`
   followed by a small delta.
-- A new internal attribute group named `attributes.<provider>.<thing>`
-  whose only purpose is to hold that delta.
+- A new internal `attributes.<provider>.<thing>` group whose only purpose
+  is to hold that delta.
 
 ## Refinement Decision Tree
 
-For every new signal, walk this tree before writing any yaml:
+For every new signal, walk this before writing yaml:
 
-1. Is this an implementation-specific variant of a signal already defined
-   in this registry (same operation, just a specific provider, framework,
-   or transport)?
-   - **Yes** → declare it in the matching `*_refinements` section with
-     `ref:` pointing at the parent's `type` or `name`. Add only the delta
-     attributes. Use per-attribute overrides for any inherited attribute
-     whose framing changes. Stop.
-   - **No** → continue.
-2. Does this signal share its attribute set with at least one other signal
-   already in the registry?
-   - **Yes** → reuse the existing attribute group via `ref_group`. Do not
-     create a new one. Add only the delta inline on the signal.
-   - **No** → continue.
-3. Does this signal share its attribute set with at least one other signal
-   you are introducing in the same change?
-   - **Yes** → create one shared internal attribute group, used by both.
-     One level deep. Do not nest.
-   - **No** → inline the attributes on the signal. Do not create an
-     attribute group.
+1. **Implementation-specific variant of an existing signal?**
+   → declare it in `*_refinements` with `ref:` to the parent. Delta only.
+   Per-attribute overrides for any inherited attribute whose framing
+   changes. Done.
+2. **Shares its attribute set with a signal already in the registry?**
+   → reuse the existing group via `ref_group`. Delta inline on the signal.
+3. **Shares its attribute set with another signal in this same change?**
+   → one shared internal group. One level deep. No nesting.
+4. **None of the above?** → inline the attributes on the signal. No group.
 
 ## Procedure
 
-1. Read the user's intent. Identify whether the change touches
-   spans, metrics, events, entities, attribute groups, refinements, or
-   several of those.
-2. **Capture a pre-change baseline.** Before editing any model file,
-   run the repo's `make package` and (if it exists) the committed-snapshot
-   target — `make schema-snapshot` in this registry, `make generate` in
-   others — so the resolved-schema and committed-snapshot artifacts
-   reflect the current model. After your edits you will re-run them
-   and read the diff to confirm only the intended signals/attributes
-   moved. Skip this step only if the user has already mentioned that a
-   baseline was captured, or if the working tree shows the artifacts
-   are already in sync with HEAD.
-3. If the syntax for any of those sections is not already obvious from the
-   surrounding files, fetch the v2 syntax reference (see Schema Reference
-   above) before editing.
-4. Walk the Refinement Decision Tree for every new signal in the change.
-5. For every new attribute group, confirm `visibility: internal` unless
-   the change is explicitly adding to a public group.
-6. Write the yaml with the fewest groups and shallowest hierarchy that
-   satisfies the rules.
-7. Run validation (next section). Fix every error before stopping.
-8. Re-read the diff for groups used exactly once, `ref_group` chains
-   deeper than two levels, public groups that should be internal, and
-   re-listed parent attributes on refinements. These are the four most
-   common drifts and the easiest to fix in a final pass.
-9. Regenerate every committed artifact the repo produces from the model
-   — `make package`, the snapshot target (`make schema-snapshot` here,
-   `make generate` in other registries), and the docs targets
-   (`make generate-registry generate-docs` here, or `make generate-docs`
-   in other registries) if all three exist — and compare against the
-   baseline from step 2. See the
-   Output Format section for what each does and what diffs to expect.
-   Do not stop the skill until each target has been run and the
-   resulting diffs are linked.
+1. Identify what the change touches: spans, metrics, events, entities,
+   attribute groups, refinements, or several.
+2. **Capture a pre-change baseline.** Run `make package` and the
+   committed-snapshot target so the resolved-schema and snapshot
+   artifacts reflect HEAD; you'll diff against this after editing.
+   Skip if the user mentioned a baseline or the working tree is in sync.
+3. If syntax for any touched section isn't obvious from surrounding
+   files, fetch the v2 syntax reference (see Schema Reference).
+4. Walk the Refinement Decision Tree for each new signal.
+5. Write the yaml; satisfy the rules.
+6. Run validation (next section). Fix every error.
+7. Re-read the diff for: groups used exactly once, `ref_group` chains
+   deeper than two levels, `visibility: public` that should be internal,
+   re-listed parent attributes on refinements, `ref_group: span.<...>`
+   inside a new signal declaration. These are the common drifts.
+8. Regenerate every committed artifact (see Output Format) and compare
+   against the step-2 baseline.
 
 ## Validation
 
-The non-negotiable gate: the resolved registry must build cleanly with
-zero errors after the change.
-
-Prefer the host repo's Makefile (or equivalent) wrapper — it already
-passes the right `--registry`, dependencies, `--v2`, and policies. Look
-for a target that produces a resolved schema; common names are `package`,
-`resolve`, `check`, `check-policies`, `validate`. A typical invocation
-looks like:
+The non-negotiable gate: the resolved registry builds cleanly with zero
+errors. Prefer the repo's Makefile wrapper:
 
 ```
 make package
 ```
 
-If the repo also exposes a `check` / `check-policies` target that runs
-the upstream policy pack, run that too — it catches id collisions and
-naming-convention violations that the package step alone does not.
+If a `check` / `check-policies` target also exists, run it — it catches
+id collisions and naming-convention violations that `package` alone
+does not.
 
-Only fall back to invoking weaver directly when the repo has no wrapper
-(rare). In that case use `weaver registry package -r <registry-root>
---v2`, or the pinned container image (`otel/weaver:<pinned-version>`)
-when weaver is not installed locally. Note: `weaver registry resolve` is
-the older name for this command and is deprecated — use `package` even
-if you see `resolve` in older docs.
-
-A change is not done until validation is green.
+Fall back to direct weaver invocation only when there is no wrapper:
+`weaver registry package -r <registry-root> --v2`, or the pinned
+container image. Note: `weaver registry resolve` is deprecated — use
+`package`.
 
 ## Output Format
 
 Do not write a prose summary of what changed. Run the repo's wrappers
-and link the artifacts — those are the change.
-
-Run each of these targets that the host repo exposes (most repos have
-all three; some only have a subset). Run them in order — the snapshot
-and docs targets both consume the resolved model that package produces:
+and link the artifacts. Run in order — snapshot and docs both consume
+the resolved model that `package` produces:
 
 1. **`make package`** — builds the resolved schema and runs validation.
-   The output directory is wrapper-specific (e.g. `./resolved`,
-   `./output`); this file is typically gitignored. Link the resolved
-   schema file it wrote.
-2. **The committed-snapshot target** — `make schema-snapshot` in this
-   registry (output at `./schema-snapshot/registry.yaml`); `make generate`
-   in other registries (output typically at `./generated/registry.yaml`).
-   Produces a committed, single-file snapshot of the resolved registry.
-   This is not docs; it is a reviewable schema diff. Link the file. If
-   CI has a "snapshot is in sync" check, this is the target it runs.
-3. **The docs regeneration targets** — in this registry, `make
-   generate-registry` regenerates the per-namespace attribute pages
-   under `docs/registry/`, and `make generate-docs` refreshes the
-   `<!-- semconv ... -->` snippet tables embedded in hand-authored docs.
-   In other registries these are typically combined under a single
-   `make generate-docs` (or `make docs`) target. This is the actual
-   docs regeneration step; the snapshot target does not do this.
+   Output is wrapper-specific (e.g. `./resolved`) and typically
+   gitignored. Link the resolved schema file.
+2. **Committed-snapshot target** — `make schema-snapshot` in this
+   registry (`./schema-snapshot/registry.yaml`); `make generate` in
+   other registries (typically `./generated/registry.yaml`).
+   Single-file reviewable schema diff. CI's "snapshot in sync" check
+   runs this.
+3. **Docs regeneration** — here, `make generate-registry` rebuilds the
+   per-namespace pages under `docs/registry/`, `make generate-docs`
+   refreshes the `<!-- semconv ... -->` snippet tables in hand-authored
+   docs. Other registries typically combine these under one target.
 
-After running all three, do `git status` (or `git diff --name-only`)
-and link every file the regeneration changed, grouped as:
-
-- the resolved-registry snapshot (e.g. `./schema-snapshot/registry.yaml`
-  or `./generated/registry.yaml`), if the repo has a snapshot target
-- regenerated registry pages under `docs/registry/`
-- snippet refreshes elsewhere under `docs/`
-
-The resolved schema and the docs diff already say which signals,
-refinements, and attribute groups moved and how. A prose recap would
-only restate them, and tends to drift from the artifacts over time.
+After running, link every file the regeneration changed: the snapshot,
+regenerated `docs/registry/` pages, and any snippet refreshes elsewhere
+under `docs/`.

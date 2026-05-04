@@ -505,6 +505,8 @@ span_refinements:
       and override the semantic conventions for [Gen AI Spans](gen-ai-spans.md).
     note: |
       `gen_ai.provider.name` MUST be set to `"openai"` and SHOULD be provided **at span creation time**.
+
+      **Span name** SHOULD be `{gen_ai.operation.name} {gen_ai.request.model}`.
     stability: development
     attributes:
       - ref_group: attributes.openai.output_type

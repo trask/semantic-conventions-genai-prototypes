@@ -10346,6 +10346,8 @@ refinements:
       note: openai.inference.client
     note: |
       `gen_ai.provider.name` MUST be set to `"openai"` and SHOULD be provided **at span creation time**.
+
+      **Span name** SHOULD be `{gen_ai.operation.name} {gen_ai.request.model}`.
     provenance:
       path: ./model/gen-ai/spans.yaml
     stability: development

@@ -57,6 +57,8 @@ Semantic Conventions for [OpenAI](https://openai.com/) client spans extend and o
 
 `gen_ai.provider.name` MUST be set to `"openai"` and SHOULD be provided **at span creation time**.
 
+**Span name** SHOULD be `{gen_ai.operation.name} {gen_ai.request.model}`.
+
 **Span kind** SHOULD be `CLIENT`.
 
 **Span status** SHOULD follow the [Recording Errors](https://github.com/open-telemetry/semantic-conventions/blob/v1.41.0/docs/general/recording-errors.md) document.
