@@ -77,6 +77,8 @@ attribute_groups:
           conditionally_required: if available, in the request, and !=1
       - ref: gen_ai.request.temperature
         requirement_level: recommended
+      - ref: gen_ai.request.top_k
+        requirement_level: recommended
       - ref: gen_ai.request.top_p
         requirement_level: recommended
       - ref: gen_ai.request.stop_sequences

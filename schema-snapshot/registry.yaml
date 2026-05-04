@@ -306,6 +306,15 @@ refinements:
       requirement_level: recommended
       stability: development
       type: double
+    - brief: The top_k sampling setting for the GenAI request.
+      examples:
+      - 1.0
+      key: gen_ai.request.top_k
+      provenance:
+        path: ./model/gen-ai/registry.yaml
+      requirement_level: recommended
+      stability: development
+      type: double
     - brief: The top_p sampling setting for the GenAI request.
       examples:
       - 1.0
@@ -3946,6 +3955,15 @@ refinements:
       requirement_level: recommended
       stability: development
       type: double
+    - brief: The top_k sampling setting for the GenAI request.
+      examples:
+      - 1.0
+      key: gen_ai.request.top_k
+      provenance:
+        path: ./model/gen-ai/registry.yaml
+      requirement_level: recommended
+      stability: development
+      type: double
     - brief: The top_p sampling setting for the GenAI request.
       examples:
       - 1.0
@@ -4606,6 +4624,15 @@ refinements:
       requirement_level: recommended
       stability: development
       type: double
+    - brief: The top_k sampling setting for the GenAI request.
+      examples:
+      - 1.0
+      key: gen_ai.request.top_k
+      provenance:
+        path: ./model/gen-ai/registry.yaml
+      requirement_level: recommended
+      stability: development
+      type: double
     - brief: The top_p sampling setting for the GenAI request.
       examples:
       - 1.0
@@ -5250,6 +5277,15 @@ refinements:
       examples:
       - 0.0
       key: gen_ai.request.temperature
+      provenance:
+        path: ./model/gen-ai/registry.yaml
+      requirement_level: recommended
+      stability: development
+      type: double
+    - brief: The top_k sampling setting for the GenAI request.
+      examples:
+      - 1.0
+      key: gen_ai.request.top_k
       provenance:
         path: ./model/gen-ai/registry.yaml
       requirement_level: recommended
@@ -6621,6 +6657,15 @@ refinements:
       examples:
       - 0.0
       key: gen_ai.request.temperature
+      provenance:
+        path: ./model/gen-ai/registry.yaml
+      requirement_level: recommended
+      stability: development
+      type: double
+    - brief: The top_k sampling setting for the GenAI request.
+      examples:
+      - 1.0
+      key: gen_ai.request.top_k
       provenance:
         path: ./model/gen-ai/registry.yaml
       requirement_level: recommended
@@ -9061,7 +9106,7 @@ refinements:
       **Span status** SHOULD be set to `ERROR` when `error.type` attribute is present.
       The status description SHOULD match the `JSONRPCError.message` if the message is available.
 
-      Refer to the [Recording Errors](/docs/general/recording-errors.md) document
+      Refer to the [Recording Errors](https://github.com/open-telemetry/semantic-conventions/blob/v1.41.0/docs/general/recording-errors.md) document
       for more details.
 
       MCP tool call execution spans are compatible with GenAI [execute_tool spans](/docs/gen-ai/gen-ai-spans.md#execute-tool-span).
@@ -9459,10 +9504,19 @@ refinements:
       It\u0027s reported by the MCP server when client initiates the request
       (or notification) or by the MCP client when server initiates the operation.
 
+      **Span name** SHOULD follow the format `{mcp.method.name} {target}`
+      where target SHOULD match `{gen_ai.tool.name}` or `{gen_ai.prompt.name}` when
+      applicable.
+      If there is no low-cardinality `target` available, the Span name SHOULD be `{mcp.method.name}`.
+
+      Instrumentation MAY allow users to opt into including `{mcp.resource.uri}`
+      as `target` in the span name when it is available but SHOULD NOT include it by default
+      to avoid high cardinality span names.
+
       **Span status** SHOULD be set to `ERROR` when `error.type` attribute is present.
       The status description SHOULD match the `JSONRPCError.message` if the message is available.
 
-      Refer to the [Recording Errors](/docs/general/recording-errors.md) document
+      Refer to the [Recording Errors](https://github.com/open-telemetry/semantic-conventions/blob/v1.41.0/docs/general/recording-errors.md) document
       for more details.
     provenance:
       path: ./model/mcp/spans.yaml
@@ -9864,6 +9918,15 @@ refinements:
       examples:
       - 0.0
       key: gen_ai.request.temperature
+      provenance:
+        path: ./model/gen-ai/registry.yaml
+      requirement_level: recommended
+      stability: development
+      type: double
+    - brief: The top_k sampling setting for the GenAI request.
+      examples:
+      - 1.0
+      key: gen_ai.request.top_k
       provenance:
         path: ./model/gen-ai/registry.yaml
       requirement_level: recommended
@@ -11502,6 +11565,15 @@ registry:
       examples:
       - 0.0
       key: gen_ai.request.temperature
+      provenance:
+        path: ./model/gen-ai/registry.yaml
+      requirement_level: recommended
+      stability: development
+      type: double
+    - brief: The top_k sampling setting for the GenAI request.
+      examples:
+      - 1.0
+      key: gen_ai.request.top_k
       provenance:
         path: ./model/gen-ai/registry.yaml
       requirement_level: recommended
@@ -14680,6 +14752,15 @@ registry:
       requirement_level: recommended
       stability: development
       type: double
+    - brief: The top_k sampling setting for the GenAI request.
+      examples:
+      - 1.0
+      key: gen_ai.request.top_k
+      provenance:
+        path: ./model/gen-ai/registry.yaml
+      requirement_level: recommended
+      stability: development
+      type: double
     - brief: The top_p sampling setting for the GenAI request.
       examples:
       - 1.0
@@ -16038,6 +16119,15 @@ registry:
       examples:
       - 0.0
       key: gen_ai.request.temperature
+      provenance:
+        path: ./model/gen-ai/registry.yaml
+      requirement_level: recommended
+      stability: development
+      type: double
+    - brief: The top_k sampling setting for the GenAI request.
+      examples:
+      - 1.0
+      key: gen_ai.request.top_k
       provenance:
         path: ./model/gen-ai/registry.yaml
       requirement_level: recommended
@@ -18472,7 +18562,7 @@ registry:
       **Span status** SHOULD be set to `ERROR` when `error.type` attribute is present.
       The status description SHOULD match the `JSONRPCError.message` if the message is available.
 
-      Refer to the [Recording Errors](/docs/general/recording-errors.md) document
+      Refer to the [Recording Errors](https://github.com/open-telemetry/semantic-conventions/blob/v1.41.0/docs/general/recording-errors.md) document
       for more details.
 
       MCP tool call execution spans are compatible with GenAI [execute_tool spans](/docs/gen-ai/gen-ai-spans.md#execute-tool-span).
@@ -18869,10 +18959,19 @@ registry:
       It\u0027s reported by the MCP server when client initiates the request
       (or notification) or by the MCP client when server initiates the operation.
 
+      **Span name** SHOULD follow the format `{mcp.method.name} {target}`
+      where target SHOULD match `{gen_ai.tool.name}` or `{gen_ai.prompt.name}` when
+      applicable.
+      If there is no low-cardinality `target` available, the Span name SHOULD be `{mcp.method.name}`.
+
+      Instrumentation MAY allow users to opt into including `{mcp.resource.uri}`
+      as `target` in the span name when it is available but SHOULD NOT include it by default
+      to avoid high cardinality span names.
+
       **Span status** SHOULD be set to `ERROR` when `error.type` attribute is present.
       The status description SHOULD match the `JSONRPCError.message` if the message is available.
 
-      Refer to the [Recording Errors](/docs/general/recording-errors.md) document
+      Refer to the [Recording Errors](https://github.com/open-telemetry/semantic-conventions/blob/v1.41.0/docs/general/recording-errors.md) document
       for more details.
     provenance:
       path: ./model/mcp/spans.yaml
