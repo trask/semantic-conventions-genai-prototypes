@@ -55,36 +55,27 @@ def _suppress_adk_native_tracing():
         adk_base_llm_flow,
         adk_functions,
     )
-    previous_tracers = {module: module.tracer for module in patched_modules}
-    previous_emit = adk_tracing.otel_logger.emit
-    previous_trace_call_llm = adk_tracing.trace_call_llm
-    previous_trace_tool_call = adk_tracing.trace_tool_call
-    previous_trace_merged_tool_calls = adk_tracing.trace_merged_tool_calls
-    previous_base_llm_flow_trace_call_llm = adk_base_llm_flow.trace_call_llm
-    previous_functions_trace_tool_call = adk_functions.trace_tool_call
-    previous_functions_trace_merged_tool_calls = adk_functions.trace_merged_tool_calls
+    previous_attributes = []
+
+    def patch_attribute(owner, name, value):
+        if hasattr(owner, name):
+            previous_attributes.append((owner, name, getattr(owner, name)))
+            setattr(owner, name, value)
 
     try:
         for module in patched_modules:
-            module.tracer = disabled_tracer
-        adk_tracing.otel_logger.emit = lambda *_args, **_kwargs: None
-        adk_tracing.trace_call_llm = lambda *_args, **_kwargs: None
-        adk_tracing.trace_tool_call = lambda *_args, **_kwargs: None
-        adk_tracing.trace_merged_tool_calls = lambda *_args, **_kwargs: None
-        adk_base_llm_flow.trace_call_llm = lambda *_args, **_kwargs: None
-        adk_functions.trace_tool_call = lambda *_args, **_kwargs: None
-        adk_functions.trace_merged_tool_calls = lambda *_args, **_kwargs: None
+            patch_attribute(module, "tracer", disabled_tracer)
+        patch_attribute(adk_tracing.otel_logger, "emit", lambda *_args, **_kwargs: None)
+        patch_attribute(adk_tracing, "trace_call_llm", lambda *_args, **_kwargs: None)
+        patch_attribute(adk_tracing, "trace_tool_call", lambda *_args, **_kwargs: None)
+        patch_attribute(adk_tracing, "trace_merged_tool_calls", lambda *_args, **_kwargs: None)
+        patch_attribute(adk_base_llm_flow, "trace_call_llm", lambda *_args, **_kwargs: None)
+        patch_attribute(adk_functions, "trace_tool_call", lambda *_args, **_kwargs: None)
+        patch_attribute(adk_functions, "trace_merged_tool_calls", lambda *_args, **_kwargs: None)
         yield
     finally:
-        for module, tracer in previous_tracers.items():
-            module.tracer = tracer
-        adk_tracing.otel_logger.emit = previous_emit
-        adk_tracing.trace_call_llm = previous_trace_call_llm
-        adk_tracing.trace_tool_call = previous_trace_tool_call
-        adk_tracing.trace_merged_tool_calls = previous_trace_merged_tool_calls
-        adk_base_llm_flow.trace_call_llm = previous_base_llm_flow_trace_call_llm
-        adk_functions.trace_tool_call = previous_functions_trace_tool_call
-        adk_functions.trace_merged_tool_calls = previous_functions_trace_merged_tool_calls
+        for owner, name, value in reversed(previous_attributes):
+            setattr(owner, name, value)
 
 
 def run_agent_reference():
