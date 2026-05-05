@@ -67,7 +67,14 @@ This validates the model against shared OpenTelemetry policies covering
 naming conventions, attribute type rules, stability requirements, and
 backwards compatibility.
 
-### 4. Update the changelog
+### 4. Update reference scenarios
+
+Changes under `model/` or `docs/` typically require updating the
+reference scenarios under `reference/` to demonstrate that the proposed
+updates are capturable. See
+[reference/CONTRIBUTING.md](reference/CONTRIBUTING.md).
+
+### 5. Update the changelog
 
 Add an entry under `Unreleased` in [CHANGELOG.md](CHANGELOG.md) for any
 change to the conventions that a consumer would care about. Editorial

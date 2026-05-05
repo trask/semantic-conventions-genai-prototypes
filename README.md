@@ -21,6 +21,8 @@ The human-readable version of the semantic conventions resides in the
 from the YAML definitions located in the [model](model/) folder.
 
 Reference implementations and their tooling live under [reference](reference/).
+For the Python reference compliance matrix and per-signal support reports, see
+[reference/README.md](reference/README.md).
 For contribution guidance specific to that project, see
 [reference/CONTRIBUTING.md](reference/CONTRIBUTING.md).
 

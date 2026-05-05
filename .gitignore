@@ -6,8 +6,9 @@ __pycache__/
 .pytest_cache/
 .coverage
 
-# Reference project cache
+# Reference scenario live output and per-scenario uv cache
 reference/.cache/
+reference/scenarios/*/results/
 
 # OS junk
 .DS_Store
