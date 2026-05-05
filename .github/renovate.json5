@@ -13,11 +13,25 @@
       "matchStrings": [
         "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+) versioning=(?<versioning>\\S+)\\s+WEAVER_VERSION=(?<currentValue>\\S+)",
         "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+) versioning=(?<versioning>\\S+)\\s+SEMCONV_VERSION=(?<currentValue>\\S+)",
-        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+) versioning=(?<versioning>\\S+) ref=(?<currentValue>\\S+)\\s+POLICY_REPO_URL=(?<packageName>\\S+)\\s+POLICY_REPO_REF=(?<currentDigest>\\S+)"
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+) versioning=(?<versioning>\\S+)\\s+POLICY_REPO_URL=(?<packageName>\\S+)\\s+POLICY_REPO_REF=(?<currentValue>\\S+)"
       ]
     }
   ],
   "packageRules": [
+    {
+      "description": "Non-major reference implementation updates",
+      "matchFileNames": [
+        "reference/**"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest"
+      ],
+      "groupName": "reference implementation dependencies (non-major)",
+      "commitMessageTopic": "reference implementation dependencies (non-major)"
+    },
     {
       "groupName": "GitHub Actions",
       "commitMessageTopic": "GitHub Actions",

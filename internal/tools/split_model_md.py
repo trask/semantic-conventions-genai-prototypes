@@ -7,12 +7,13 @@
 
 Background
 ----------
-After ``convert_model_to_v2.py`` lifts inline attribute defs to the top-level
-``attributes:`` list, Weaver renders the entire ``./model`` registry as a single
-``docs/registry/attributes/model.md`` page (named after the registry root)
-rather than the per-namespace ``gen-ai.md`` / ``mcp.md`` / ``openai.md`` pages
-v1 produced. That collapses every cross-link in the docs to point at
-``model.md``, which produces a noisy diff that drowns out real semantic changes.
+With Weaver's ``definition/2`` layout, attribute defs live at the top-level
+``attributes:`` list and Weaver renders the entire ``./model`` registry as a
+single ``docs/registry/attributes/model.md`` page (named after the registry
+root) rather than the per-namespace ``gen-ai.md`` / ``mcp.md`` / ``openai.md``
+pages the legacy layout produced. That collapses every cross-link in the docs
+to point at ``model.md``, which produces a noisy diff that drowns out real
+semantic changes.
 
 This script is a review-aid only. It rewrites generated links in ``docs/`` so
 they target the same per-namespace paths v1 produced, and restores the
@@ -21,7 +22,7 @@ merged ``model.md`` itself is left in place. Nothing here changes the actual
 generation pipeline -- it just reduces diff noise so real changes are easier
 to review.
 
-Run after ``make generate-docs``::
+Run after ``make generate-registry``::
 
     uv run internal/tools/split_model_md.py
 
