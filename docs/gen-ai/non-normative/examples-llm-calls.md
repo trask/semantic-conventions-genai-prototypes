@@ -1,6 +1,6 @@
 # LLM call examples
 
-<!-- START doctoc -->
+<!-- toc -->
 
 - [Simple chat completion](#simple-chat-completion)
   - [GenAI client span when content capturing is disabled](#genai-client-span-when-content-capturing-is-disabled)
@@ -18,7 +18,7 @@
 - [Chat completion with multiple choices](#chat-completion-with-multiple-choices)
   - [GenAI client span when content capturing is enabled on span attributes](#genai-client-span-when-content-capturing-is-enabled-on-span-attributes-1)
 
-<!-- END doctoc -->
+<!-- tocstop -->
 
 ## Simple chat completion
 
