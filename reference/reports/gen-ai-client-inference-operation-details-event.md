@@ -7,6 +7,7 @@
 | Attribute | Supporting Libraries |
 | --- | --- |
 | gen_ai.operation.name | [anthropic], [autogen], [aws-bedrock], [azure-ai-inference], [cohere], [dspy], [google-genai], [groq], [instructor], [litellm], [llamaindex], [mistralai], [openai], [pydantic-ai], [vertexai] |
+| gen_ai.provider.name | (none) |
 
 ## Conditionally Required
 
@@ -18,6 +19,7 @@
 | gen_ai.request.model | [anthropic], [autogen], [aws-bedrock], [azure-ai-inference], [cohere], [dspy], [google-genai], [groq], [instructor], [litellm], [llamaindex], [mistralai], [openai], [pydantic-ai], [vertexai] |
 | gen_ai.request.seed | [pydantic-ai] |
 | gen_ai.request.stream | (none) |
+| gen_ai.request.top_k | (none) |
 | server.port | [anthropic], [autogen], [azure-ai-inference], [openai], [pydantic-ai] |
 
 ## Recommended
