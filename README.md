@@ -20,6 +20,10 @@ The human-readable version of the semantic conventions resides in the
 [docs](docs/) folder. Major parts of these Markdown documents are generated
 from the YAML definitions located in the [model](model/) folder.
 
+Reference implementations and their tooling live under [reference](reference/).
+For contribution guidance specific to that project, see
+[reference/CONTRIBUTING.md](reference/CONTRIBUTING.md).
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).

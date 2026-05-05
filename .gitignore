@@ -6,6 +6,9 @@ __pycache__/
 .pytest_cache/
 .coverage
 
+# Reference project cache
+reference/.cache/
+
 # OS junk
 .DS_Store
 Thumbs.db
