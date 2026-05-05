@@ -9,7 +9,7 @@ events:
       independently from traces.
     stability: development
     attributes:
-      - ref_group: attributes.gen_ai.inference.client
+      - ref_group: span.gen_ai.inference.client
   - name: gen_ai.evaluation.result
     brief: >
       This event captures the result of evaluating GenAI output for quality, accuracy, or other characteristics.
@@ -17,6 +17,7 @@ events:
       or set `gen_ai.response.id` when span id is not available.
     stability: development
     attributes:
+      - ref_group: attributes.gen_ai.error
       - ref: gen_ai.evaluation.name
         requirement_level: required
       - ref: gen_ai.evaluation.score.value
@@ -34,13 +35,6 @@ events:
           The unique identifier assigned to the specific
           completion being evaluated. This attribute helps correlate the evaluation
           event with the corresponding operation when span id is not available.
-      - ref: error.type
-        requirement_level:
-          conditionally_required: "if the operation ended in an error"
-        note: |
-          The `error.type` SHOULD match the error code returned by the Generative AI Evaluation provider or the client library,
-          the canonical name of exception that occurred, or another low-cardinality error identifier.
-          Instrumentations SHOULD document the list of errors they report.
 
   - name: gen_ai.client.operation.exception
     brief: >

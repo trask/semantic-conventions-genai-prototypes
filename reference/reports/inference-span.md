@@ -19,6 +19,7 @@
 | gen_ai.request.model | [anthropic], [autogen], [aws-bedrock], [azure-ai-inference], [azure-openai], [cohere], [crewai], [dspy], [google-adk], [google-genai], [groq], [instructor], [litellm], [llamaindex], [mistralai], [openai], [openai-agents], [pydantic-ai], [vertexai] |
 | gen_ai.request.seed | [autogen], [crewai], [openai], [pydantic-ai] |
 | gen_ai.request.stream | (none) |
+| gen_ai.request.top_k | [google-adk] |
 | server.port | [anthropic], [autogen], [aws-bedrock], [azure-ai-inference], [azure-openai], [cohere], [crewai], [google-adk], [llamaindex], [mistralai], [openai], [openai-agents], [pydantic-ai] |
 
 ## Recommended
@@ -30,7 +31,6 @@
 | gen_ai.request.presence_penalty | [autogen], [crewai], [google-adk], [openai], [pydantic-ai] |
 | gen_ai.request.stop_sequences | [autogen], [crewai], [google-adk], [openai], [pydantic-ai] |
 | gen_ai.request.temperature | [autogen], [crewai], [google-adk], [llamaindex], [openai], [pydantic-ai] |
-| gen_ai.request.top_k | [google-adk] |
 | gen_ai.request.top_p | [autogen], [crewai], [google-adk], [openai], [pydantic-ai] |
 | gen_ai.response.finish_reasons | [anthropic], [autogen], [aws-bedrock], [azure-ai-inference], [azure-openai], [claude-agent-sdk], [cohere], [crewai], [dspy], [google-adk], [google-genai], [groq], [instructor], [litellm], [llamaindex], [mistralai], [openai], [pydantic-ai], [vertexai] |
 | gen_ai.response.id | [anthropic], [autogen], [azure-ai-inference], [azure-openai], [cohere], [crewai], [dspy], [groq], [instructor], [litellm], [llamaindex], [mistralai], [openai], [openai-agents], [pydantic-ai] |
